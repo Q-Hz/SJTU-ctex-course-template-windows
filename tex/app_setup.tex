@@ -1,6 +1,74 @@
 %# -*- coding: utf-8-unix -*-
 \chapter{搭建模板编译环境}
 
+\section{Windows 适配版使用说明}
+
+本版本面向 Windows 用户，基于旧版 SJTU-TermPaper 课程论文模板进行适配。
+所用文档类为 \texttt{sjtuthesis}，版本为 2017 年 2 月 19 日的 \texttt{v0.9.5}。
+2026 年 10 月 28 日，已在本机 Windows 与 TeX Live 2024 环境中完成
+XeLaTeX、Biber、XeLaTeX、XeLaTeX 的完整编译验证，成功生成 PDF。
+
+\subsection{安装与编译}
+
+Windows 用户需安装可用的 TeX Live 及模板所需宏包，并确认系统中有
+宋体（SimSun）、黑体（SimHei）、楷体（KaiTi）和仿宋（FangSong）。
+本版本默认采用 \texttt{fontset=windows}，无需安装 Adobe 中文字体。
+安装完成后，确认终端可以调用 \texttt{xelatex} 和 \texttt{biber}。
+
+在主文件 \texttt{thesis.tex} 所在目录打开 PowerShell 或命令提示符，依次执行：
+
+\begin{lstlisting}[basicstyle=\small\ttfamily, numbers=none, breaklines=true]
+xelatex -interaction=nonstopmode -halt-on-error -file-line-error thesis.tex
+biber thesis
+xelatex -interaction=nonstopmode -halt-on-error -file-line-error thesis.tex
+xelatex -interaction=nonstopmode -halt-on-error -file-line-error thesis.tex
+\end{lstlisting}
+
+编译结果为模板根目录下的 \texttt{thesis.pdf}。
+使用图形编辑器时，须将 \texttt{thesis.tex} 设为主文件，选择 XeLaTeX 编译器，
+并使用 Biber 处理参考文献。
+
+\subsection{本版本修复的问题}
+
+\begin{enumerate}
+	\item \textbf{Adobe 中文字体缺失。}
+	      原主文件 \texttt{thesis.tex} 指定 \texttt{fontset=adobe}，
+	      在未安装相应字体的 Windows 环境中，会出现
+	      \texttt{The font "AdobeSongStd-Light" cannot be found} 错误并中止编译。
+	      本版本将默认设置改为 \texttt{fontset=windows}，使用上述 Windows 中文字体。
+
+	\item \textbf{双语题注选项在声明前被使用。}
+	      原文档类 \texttt{sjtuthesis.cls} 在声明
+	      \texttt{bi-first}、\texttt{bi-second} 选项之前调用它们，
+	      在本机宏包环境下触发 \texttt{Package caption Error: bi-first undefined}。
+	      本版本先通过 \verb|\DeclareCaptionOption| 声明选项，
+	      再执行相应的 \verb|\captionsetup| 设置。
+
+	\item \textbf{嵌套条件缺少结束标记。}
+	      原配置文件 \texttt{sjtuthesis.cfg} 在学位类型判断中缺少一个
+	      \verb|\fi|，导致编译结束时提示条件未闭合。
+	      本版本已补齐该标记，使嵌套条件完整闭合。
+\end{enumerate}
+
+字体配置是针对 Windows 的默认适配；题注选项顺序与条件闭合问题属于旧版模板代码问题。
+此外，页脚总页数改用已加载的 \texttt{lastpage} 宏包提供的
+\texttt{LastPage} 标签，使增加附录内容后仍能正确统计总页数。
+当前示例正文未引用参考文献，因此参考文献为空或 Biber 提示无引用均属预期情况。
+字体尺寸替代、行宽超出等排版警告不等同于编译失败。
+
+\subsection{版本来源与适用范围}
+
+本次修复针对本目录中的旧版课程论文模板。
+当前上游项目为 \href{https://github.com/sjtug/SJTUThesis}{\texttt{sjtug/SJTUThesis}}，
+其文件结构与本旧版模板不同；本次验证不表示当前上游存在相同问题，
+也不保证可将这些修改直接套用到其最新版本。
+后续 Fork 当前上游仓库时，应按其结构另行整合并验证。
+
+本版本默认面向 Windows。在 macOS、Linux 或在线平台上使用时，
+应选择当地可用的 CTeX 字体配置，并重新进行编译验证。
+以下保留原模板中的其他平台安装说明作为历史参考；
+其中的发行版年份及命令并非本次验证环境。
+
 \section{安装TeX发行版}
 
 \subsection{Mac OS X}
@@ -31,6 +99,7 @@ cd install-tl-20150411/
 
 Mac和Deepin用户双击字体文件即可安装字体。
 
+\clearpage
 \subsection{RedHat/CentOS用户}
 
 RedHat/CentOS用户请先将字体文件复制到字体目录下，调用fc-cache刷新缓存后即可在TeXLive中使用新字体。

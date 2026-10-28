@@ -192,9 +192,6 @@
 
 % Caption setting in caption and bicaption pacakge
 \captionsetup{format=plain,labelformat=simple,labelsep=space,justification=centering,font=small}
-\captionsetup[bi-first]{bi-first}
-\captionsetup[bi-second]{bi-second}
-
 \DeclareCaptionOption{bi-first}[]{
     \def\tablename{\sjtu@tablename}
     \def\figurename{\sjtu@figurename}
@@ -205,6 +202,8 @@
     \def\figurename{Figure}
 
 }
+\captionsetup[bi-first]{bi-first}
+\captionsetup[bi-second]{bi-second}
 
 % Ref https://github.com/weijianwen/SJTUThesis/issues/186
 \@addtoreset{algorithm}{chapter}% algorithm counter resets every chapter
@@ -526,7 +525,7 @@
 	  \fancyhf{}
 	  \fancyhead[L]{\includegraphics[width=0.22\textwidth]{figure/sjtubanner}}
 	  \fancyhead[R]{\nouppercase{\small\kaishu\sjtu@value@titlemark}}
-	  \fancyfoot[C]{\small 第~{\bfseries\thepage}~页\,共~{\bfseries\pageref{last}}~页}
+	  \fancyfoot[C]{\small 第~{\bfseries\thepage}~页\,共~{\bfseries\pageref{LastPage}}~页}
 	  \renewcommand{\headheight}{32pt}
 	}
   %% 英文大摘要
@@ -542,7 +541,7 @@
 	  \fancyhf{}
 	  \fancyhead[L]{\includegraphics[width=0.22\textwidth]{figure/sjtubanner}}
 	  \fancyhead[R]{\nouppercase{\small\kaishu\sjtu@value@titlemark}}
-	  \fancyfoot[C]{\small 第~{\bf\thepage}~页\,共~{\bf\pageref{last}}~页}
+	  \fancyfoot[C]{\small 第~{\bf\thepage}~页\,共~{\bf\pageref{LastPage}}~页}
 	  \renewcommand{\headheight}{32pt}
 	}
 \fi
